@@ -1,17 +1,20 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link, Outlet } from 'react-router-dom';
-import { getMovieDetails } from 'services/api';
+import { useEffect, useState, useRef, Suspense } from 'react';
+import { useParams, Link, Outlet, useLocation } from 'react-router-dom';
+import { getMovieDetails, getImagesConfig } from 'services/api';
 
 const MoviesDetails = () => {
   const [movie, setMovie] = useState({});
-
+  const [imageConfig, setImageConfig] = useState({});
   const { movieId } = useParams();
+  const location = useLocation()
+  const backLinkRef = useRef(location.state?.from || '/')
 
   useEffect(() => {
     async function fetchMovieDetails() {
       try {
+        const img = await getImagesConfig();
+        setImageConfig(img);
         const data = await getMovieDetails(movieId);
-        console.log(data.genres);
         setMovie(data);
       } catch (error) {
         console.error(error);
@@ -20,12 +23,14 @@ const MoviesDetails = () => {
     fetchMovieDetails();
   }, [movieId]);
 
+
   return (
     <>
+    <Link to={backLinkRef.current}>Back</Link>
       {movie && (
         <>
           <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            src={`${imageConfig.base_url}w500${movie.poster_path}`}
             alt={movie.title}
             width="300px"
             height="300px"
@@ -39,13 +44,15 @@ const MoviesDetails = () => {
           <h2>Additional information</h2>
           <ul>
             <li>
-              <Link to='cast'>Cast</Link>
+              <Link to="cast">Cast</Link>
             </li>
             <li>
-              <Link to='reviews'>Reviews</Link>
+              <Link to="reviews">Reviews</Link>
             </li>
           </ul>
-          <Outlet/>
+          <Suspense fallback={<div>Loading subpage...</div>}>
+          <Outlet />
+          </Suspense>
         </>
       )}
     </>

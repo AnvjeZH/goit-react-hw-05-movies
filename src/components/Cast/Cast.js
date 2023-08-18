@@ -11,7 +11,6 @@ export default function Cast() {
     async function fetchCast() {
       try {
         const data = await getCredits(movieId);
-        console.log(data);
         setCast(data);
       } catch (error) {
         console.error(error);
@@ -21,7 +20,8 @@ export default function Cast() {
   }, [movieId]);
   return (
     <>
-      <ul>
+    {cast.length > 0 ? (<ul>
+        
         {cast.map(({ cast_id, character, name, profile_path }) => (
           <li key={cast_id}>
             <img
@@ -34,7 +34,8 @@ export default function Cast() {
             <p>Character: {character}</p>
           </li>
         ))}
-      </ul>
+      </ul>) : (<p>We don't have any cast for this movie.</p>)}
+      
     </>
   );
 }

@@ -72,3 +72,22 @@ try {
   console.error(error);
 }
 }
+
+export async function getSearchMovie(searchQuery) {
+  const options = {
+    method: 'GET',
+    url: 'https://api.themoviedb.org/3/search/movie',
+    params: {query: searchQuery, include_adult: 'false', language: 'en-US', page: '1'},
+    headers: {
+      accept: 'application/json',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMTU5YmY3MWFiYzM0NzBmNDVkMDdjOGI1ZDNhODM5YiIsInN1YiI6IjY0ZGJhZWI2MDAxYmJkMDQxYWYzNDRmNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.QPxM_-Q55UeA1hwkxgY0DaHePNMMzHQ6--rME54wr20'
+    }
+  };
+
+  try {
+    const response = await axios(options)
+    return response.data.results
+  } catch (error) {
+    console.error(error);
+  }
+}

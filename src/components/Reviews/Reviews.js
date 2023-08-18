@@ -11,7 +11,6 @@ export default function Reviews() {
     async function fetchReviews() {
       try {
         const data = await getReviews(movieId);
-        console.log(data);
         setReviews(data);
       } catch (error) {
         console.error(error);
@@ -21,15 +20,18 @@ export default function Reviews() {
   }, [movieId]);
   return (
     <>
-      {reviews.length > 0 ? (<ul>
-        {reviews.map(({author, content, id}) => (
+      {reviews.length > 0 ? (
+        <ul>
+          {reviews.map(({ author, content, id }) => (
             <li key={id}>
-                <h3>Author: {author}</h3>
-                <p>{content}</p>
+              <h3>Author: {author}</h3>
+              <p>{content}</p>
             </li>
-        ))}
-      </ul>) : (<p>We don't have any reviews for this movie.</p>)}
-      
+          ))}
+        </ul>
+      ) : (
+        <p>We don't have any reviews for this movie.</p>
+      )}
     </>
   );
 }
